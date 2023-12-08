@@ -1,11 +1,7 @@
-<?php require_once (realpath(dirname(__FILE__)."/../../Modelo/mdl_control.php")); 
-if (isset($_GET['mat'])) {
-  $_COOKIE['mat'] = $_GET['mat'];
-}
-if (isset($_POST['txt_ob'])){ 
-  Controlmdl::mdlGuardarobservaciones($_POST['txt_ob'],$_COOKIE['mat']);
-  unset($_COOKIE['mat']);
-  //unset($_GET['mat']);
+<?php 
+require_once (realpath(dirname(__FILE__)."/../../Modelo/mdl_control.php")); 
+if (isset($_POST['txt_ob']) && isset($_GET['mat'])){ 
+  Controlmdl::mdlGuardarobservaciones($_POST['txt_ob'], $_GET['mat']);
 }
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -43,7 +39,7 @@ if (isset($_POST['txt_ob'])){
           </thead>
           <tbody>
             <?php
-              foreach(Controlmdl::mdlObtenerobservaciones() as $key){
+              foreach(Controlmdl::mdlObtenerobservaciones($_GET['mat']) as $key){
                 echo '<tr>
                 <td>'.$key["folio"].'</td>
                 <td>'.$key["fecha"].'</td>

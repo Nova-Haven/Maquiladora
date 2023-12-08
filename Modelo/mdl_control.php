@@ -1,8 +1,8 @@
 <?php
 class Controlmdl {
-  static public function mdlObtenerobservaciones() {
-    $stmt = Conexion::conectar()->prepare("SELECT * FROM controlalumnos");
-    $stmt->execute();
+  static public function mdlObtenerobservaciones($mat) {
+    $stmt = Conexion::conectar()->prepare("SELECT * FROM controlalumnos WHERE Matricula = ?");
+    $stmt->execute([$mat]);
     return $stmt->fetchAll();
   }
 
