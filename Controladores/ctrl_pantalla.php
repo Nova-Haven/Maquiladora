@@ -1,4 +1,5 @@
 <?php
+require_once(realpath(dirname(__FILE__) . '/../Modelo/mdl_pantalla.php'));
 class PantallaCtrl {
     static public function ctrlIngresoPantalla() {
         
@@ -10,8 +11,7 @@ class PantallaCtrl {
                     $_SESSION["pantalla"] = "activa";
                     echo '<script>window.location="inicio";</script>';
                 } else {
-                    
-                    echo 'mal';
+                    echo 'Contraseña incorrecta, por favor verifique e intente de nuevo.';
                 }
             }
         }
