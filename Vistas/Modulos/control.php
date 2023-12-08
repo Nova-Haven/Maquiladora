@@ -3,7 +3,7 @@ if (isset($_GET['mat'])) {
   $_COOKIE['mat'] = $_GET['mat'];
 }
 if (isset($_POST['txt_ob'])){ 
-  Controlmdl::mdlGuardarobservaciones($_COOKIE['mat'],$_POST['txt_ob']);
+  Controlmdl::mdlGuardarobservaciones($_POST['txt_ob'],$_COOKIE['mat']);
   unset($_COOKIE['mat']);
   //unset($_GET['mat']);
 }
@@ -39,7 +39,6 @@ if (isset($_POST['txt_ob'])){
             <th>Folio</th>
             <th>Fecha</th>
             <th>Observaciones</th>
-            <th>Registro</th>
           </tr>
           </thead>
           <tbody>
