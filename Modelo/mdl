@@ -1,0 +1,30 @@
+<?php
+require_once "mdl_conexion.php";
+class Alumnomdl {
+    static public function mdlObtenerAlumno() {
+       
+            $stmt = Conexion::conectar()->prepare("SELECT * FROM infoalumnos");
+            $stmt->execute();
+            return $stmt -> fetchAll();
+            //$stmt->close();
+            //$stmt=null;
+        }
+        
+    static public function mdlGuardarAlumno($datos){
+        $stmt = Conexion::conectar()->prepare("INSERT INTO clientesdatos (`Matricula`, `Nom`, `App`, `Apm`,`Grup`, `Email_insti`, `TutorCel`, `CelAlum`, `EmailTutor`) VALUES (:Matricula,:Nom,:App,:Apm,:Grup,:Email_insti,:TutorCel,:CelAlum,:EmailTutor)");
+        $stmt->bindParam(":Matricula",$datos["Matricula"],PDO::PARAM_STR);
+        $stmt->bindParam(":Nom",$datos["Nom"],PDO::PARAM_STR);
+        $stmt->bindParam(":App",$datos["App"],PDO::PARAM_STR);
+        $stmt->bindParam(":Apm",$datos["Apm"],PDO::PARAM_STR);
+        $stmt->bindParam(":Grup",$datos["Grup"],PDO::PARAM_STR);
+        $stmt->bindParam(":Email_insti",$datos["Email_insti"],PDO::PARAM_STR);
+        $stmt->bindParam(":TutorCel",$datos["TutorCel"],PDO::PARAM_STR);
+        $stmt->bindParam(":CelAlum",$datos["CelAlum"],PDO::PARAM_STR);
+        if($stmt->execute()){
+            return "correcto";
+        }else{
+            return "error";
+        }
+        $stmt=null;
+    }
+}
