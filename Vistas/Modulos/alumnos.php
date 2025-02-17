@@ -57,7 +57,7 @@
                       <td>'.$value["TutorCel"].'</td>
                       <td>'.$value["CelAlum"].'</td>
                       <td>
-                      <a href="control"><input type="button" class="btn btn-secondary" value="Ir" ></a>
+                      <a href="control?mat='.$value["Matricula"].'"><input type="button" class="btn btn-secondary" value="Ir" ></a>
                       </td> 
                       </tr>';
                     }
