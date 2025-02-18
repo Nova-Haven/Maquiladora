@@ -1,21 +1,26 @@
 <?php
-class Controlmdl {
-  static public function mdlObtenerobservaciones($mat) {
-    $stmt = Conexion::conectar()->prepare("SELECT * FROM controlalumnos WHERE Matricula = ?");
+class Controlmdl
+{
+  public static function mdlObtenerobservaciones($mat)
+  {
+    $db = Conexion::getInstance()->getConnection();
+    $stmt = $db->prepare("SELECT * FROM controlalumnos WHERE Matricula = ?");
     $stmt->execute([$mat]);
     return $stmt->fetchAll();
   }
 
-  static public function mdlGuardarobservaciones($obs, $mat) {
-    $stmt = Conexion::conectar()->prepare("INSERT INTO controlalumnos (fecha, observaciones, Matricula) VALUES (?, ?, ?)");
+  public static function mdlGuardarobservaciones($obs, $mat)
+  {
+    $db = Conexion::getInstance()->getConnection();
+    $stmt = $db->prepare("INSERT INTO controlalumnos (fecha, observaciones, Matricula) VALUES (?, ?, ?)");
     $currDate = date('Y-m-d');
     $stmt->bindParam(1, $currDate);
     $stmt->bindParam(2, $obs);
     $stmt->bindParam(3, $mat);
     if ($stmt->execute()) {
-        return "correcto";
+      return "correcto";
     } else {
-        return "error";
+      return "error";
     }
   }
 }
