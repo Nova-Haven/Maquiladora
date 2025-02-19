@@ -2,3 +2,6 @@
 /node_modules
 /vendor
 data/db.sqlite
+.env
+*.xlsx
+data/inventory_cache.php

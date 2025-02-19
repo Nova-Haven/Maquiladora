@@ -9,13 +9,9 @@ class LoginCtrl
                 if (preg_match('/^[a-zA-Z0-9]+$/', $_POST["txt_contrasena"])) {
                     $inputPassword = $_POST["txt_contrasena"];
                     $hashedPassword = LoginMdl::login();
-                    echo "Input password: $inputPassword\n";
-                    echo "Hashed password: ";
-                    var_dump($hashedPassword);
-                    echo "Password verify: " . password_verify($inputPassword, $hashedPassword) . "\n";
                     if ($hashedPassword && password_verify($inputPassword, $hashedPassword)) {
                         $_SESSION["access"] = true;
-                        echo '<script>window.location="inicio";</script>';
+                        Header("Location: /");
                     } else {
                         echo 'Contraseña incorrecta, por favor verifique e intente de nuevo.';
                     }
@@ -28,7 +24,7 @@ class LoginCtrl
         }
     }
 
-    public static function logout(): never
+    public static function logout($redirect = false): void
     {
         // Initialize session if not already started
         if (session_status() === PHP_SESSION_NONE) {
@@ -39,15 +35,16 @@ class LoginCtrl
         $_SESSION = [];
 
         // Delete the session cookie
-        if (isset($_COOKIE[session_name()])) {
+        /*if (isset($_COOKIE[session_name()])) {
             setcookie(session_name(), '', time() - 3600, '/');
-        }
+        }*/
 
         // Destroy the session
         session_destroy();
 
         // Redirect using PHP instead of JavaScript
-        header('Location: ../../index.php');
-        exit();
+        if ($redirect) {
+            echo "<script>window.location.replace('/');</script>";
+        }
     }
 }

@@ -3,25 +3,8 @@
     "@ionic/core": "^8.4.3",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "5",
-    "chartjs": "^0.3.24",
     "datatables": "^1.10.18",
-    "datatables-buttons": "^1.0.3",
-    "datatables-responsive": "^1.0.7",
-    "datatables.net": "^2.2.2",
-    "daterangepicker": "^3.1.0",
     "fontawesome-free": "^1.0.4",
-    "icheck-bootstrap": "^3.0.1",
-    "jquery": "^3.7.1",
-    "jquery-knob": "^1.2.11",
-    "jquery-ui": "^1.14.1",
-    "jqvmap": "^1.5.1",
-    "jszip": "^3.10.1",
-    "moment": "^2.30.1",
-    "overlayscrollbars": "^2.11.0",
-    "pdfmake": "^0.2.18",
-    "sparklines": "^1.3.0",
-    "summernote": "^0.9.1",
-    "sweetalert2": "^11.17.2",
-    "tempusdominus-bootstrap-4": "^5.39.2"
+    "jquery": "^3.7.1"
   }
 }

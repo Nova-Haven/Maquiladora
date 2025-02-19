@@ -5,7 +5,7 @@ class LoginMdl
     public static function login()
     {
         try {
-            $db = Conexion::getInstance()->getConnection();
+            $db = Conexion::getInstance()->getDatabase();
 
             // Use password hash column instead of plain text
             $stmt = $db->prepare("SELECT pwd FROM login LIMIT 1");

@@ -1,13 +1,13 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-  <a href="inicio" class="brand-link">
-    <img src="Assets/cona.png" alt="LogoConalep" class="brand-image img-circle elevation-0" style="opacity: 1">
+  <a href="/" class="brand-link">
+    <img src="assets/img/cona.png" alt="LogoConalep" class="brand-image img-circle elevation-0" style="opacity: 1">
     <span class="brand-text font-weight-light">Formex</span>
   </a>
 
   <div class="sidebar">
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-        <img src="Assets/cona.png" class="img-circle elevation-2" alt="User Image">
+        <img src="assets/img/cona.png" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
         <a href="#" class="d-block">Empleado X</a>
@@ -25,22 +25,13 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="alumnos" class="nav-link">
+          <a href="inventario" class="nav-link">
             <i class="nav-icon fas fa-user"></i>
             <p>
-              Alumnos
+              Inventario
             </p>
           </a>
         </li>
-        <li class="nav-item">
-          <a href="calendario" class="nav-link">
-            <i class="nav-icon far fa-calendar-alt"></i>
-            <p>
-              Calendario
-            </p>
-          </a>
-        </li>
-
       </ul>
     </nav>
   </div>

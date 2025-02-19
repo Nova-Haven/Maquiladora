@@ -6,7 +6,7 @@
   <div class="lockscreen-item">
     <!-- lockscreen image -->
     <div class="lockscreen-image">
-      <img src="Assets/cona.png" alt="User Image">
+      <img src="assets/img/cona.png" alt="User Image">
     </div>
     <form method="post" class="lockscreen-credentials">
       <div class="input-group">
