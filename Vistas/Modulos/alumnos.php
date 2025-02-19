@@ -95,7 +95,7 @@ require_once "Modelo/mdl_alumno.php";
         </div>
 
         <?php
-        if (isset($_POST['guardar_alumno'])) {
+        /*if (isset($_POST['guardar_alumno'])) {
           $matricula = $_POST['txt_matri'];
           $info_alumno = Alumnomdl::obtenerInfoAlumnoDesdeExcel($matricula);
 
@@ -131,7 +131,7 @@ require_once "Modelo/mdl_alumno.php";
                     });
                 </script>";
           }
-        }
+        }*/
         ?>
 
       </form>

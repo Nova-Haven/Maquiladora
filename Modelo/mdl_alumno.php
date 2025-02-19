@@ -4,7 +4,7 @@ class Alumnomdl
     public static function mdlObtenerAlumno()
     {
         try {
-            $db = Conexion::getInstance()->getConnection();
+            $db = Conexion::getInstance();
             $stmt = $db->prepare("SELECT * FROM infoalumnos");
             $stmt->execute();
             return $stmt->fetchAll();
@@ -16,7 +16,7 @@ class Alumnomdl
 
     public static function mdlGuardarAlumno($datos)
     {
-        $db = Conexion::getInstance()->getConnection();
+        $db = Conexion::getInstance();
         $stmt = $db->prepare("INSERT INTO infoalumnos (Matricula, Nom, App, Apm, Grup, TutorCel, CelAlum) 
                                                   VALUES (:Matricula, :Nom, :App, :Apm, :Grup,  :TutorCel, :CelAlum)");
         $stmt->bindParam(":Matricula", $datos["Matricula"], PDO::PARAM_STR);
