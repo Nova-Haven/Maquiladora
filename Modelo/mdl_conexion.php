@@ -35,6 +35,11 @@ class Conexion
         return $this::EXCEL_FILE;
     }
 
+    public function getDbFilename()
+    {
+        return $this::LOCAL_DB;
+    }
+
     public static function ensureConnection(): void
     {
         try {

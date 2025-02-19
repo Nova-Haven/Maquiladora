@@ -27,65 +27,67 @@ class Inventario
         return md5_file($filePath);
     }
 
+    private const CACHE_TABLE = 'inventory_cache';
+
+    private static function initializeCache()
+    {
+        try {
+            $db = new SQLite3(Conexion::getInstance()->getDbFilename());
+            $db->exec("CREATE TABLE IF NOT EXISTS " . self::CACHE_TABLE . " (
+            id INTEGER PRIMARY KEY,
+            file_hash TEXT NOT NULL,
+            data BLOB NOT NULL,
+            created_at INTEGER NOT NULL
+        )");
+            return $db;
+        } catch (Exception $e) {
+            error_log("Failed to initialize cache table: " . $e->getMessage());
+            return null;
+        }
+    }
+
     private static function loadCache()
     {
-        if (file_exists(self::CACHE_FILE)) {
-            $encryptedData = file_get_contents(self::CACHE_FILE);
-            if ($encryptedData === false) {
+        try {
+            $db = self::initializeCache();
+            if (!$db)
                 return null;
-            }
 
-            try {
-                // Get the IV from the first 16 bytes
-                $iv = substr($encryptedData, 0, 16);
-                $encrypted = substr($encryptedData, 16);
-                $encryptionKey = self::getEncryptionKey();
+            $stmt = $db->prepare("SELECT data FROM " . self::CACHE_TABLE . " WHERE file_hash = :hash ORDER BY created_at DESC LIMIT 1");
+            $stmt->bindValue(':hash', self::$fileHash, SQLITE3_TEXT);
+            $result = $stmt->execute();
 
-                // Decrypt the data
+            if ($row = $result->fetchArray(SQLITE3_ASSOC)) {
                 $decrypted = openssl_decrypt(
-                    $encrypted,
+                    $row['data'],
                     self::ENCRYPTION_METHOD,
-                    $encryptionKey,
+                    self::getEncryptionKey(),
                     0,
-                    $iv
+                    substr($row['data'], 0, 16) // First 16 bytes are IV
                 );
-
-                if ($decrypted === false) {
-                    return null;
-                }
-
-                return unserialize($decrypted);
-            } catch (Exception $e) {
-                error_log("Cache decryption failed: " . $e->getMessage());
-                return null;
+                return $decrypted ? unserialize($decrypted) : null;
             }
+            return null;
+        } catch (Exception $e) {
+            error_log("Cache load failed: " . $e->getMessage());
+            return null;
         }
-        return null;
     }
 
     private static function saveCache($data, $hash)
     {
-        $cacheDir = dirname(self::CACHE_FILE);
-        if (!file_exists($cacheDir)) {
-            mkdir($cacheDir, 0755, true);
-        }
-
-        $cache = [
-            'hash' => $hash,
-            'data' => $data,
-            'timestamp' => time()
-        ];
-
         try {
-            // Generate a random IV
-            $iv = openssl_random_pseudo_bytes(16);
-            $encryptionKey = self::getEncryptionKey();
+            self::cleanupCache();
+            $db = self::initializeCache();
+            if (!$db)
+                return;
 
-            // Encrypt the serialized data
+            // Generate IV and encrypt data
+            $iv = openssl_random_pseudo_bytes(16);
             $encrypted = openssl_encrypt(
-                serialize($cache),
+                serialize($data),
                 self::ENCRYPTION_METHOD,
-                $encryptionKey,
+                self::getEncryptionKey(),
                 0,
                 $iv
             );
@@ -94,15 +96,38 @@ class Inventario
                 throw new Exception("Encryption failed");
             }
 
-            // Prepend the IV to the encrypted data
+            // Prepend IV to encrypted data
             $finalData = $iv . $encrypted;
 
-            // Save the encrypted data
-            if (file_put_contents(self::CACHE_FILE, $finalData) === false) {
-                throw new Exception("Failed to write cache file");
-            }
+            // Delete old cache entries for this hash
+            $stmt = $db->prepare("DELETE FROM " . self::CACHE_TABLE . " WHERE file_hash = :hash");
+            $stmt->bindValue(':hash', $hash, SQLITE3_TEXT);
+            $stmt->execute();
+
+            // Insert new cache entry
+            $stmt = $db->prepare("INSERT INTO " . self::CACHE_TABLE . " (file_hash, data, created_at) VALUES (:hash, :data, :time)");
+            $stmt->bindValue(':hash', $hash, SQLITE3_TEXT);
+            $stmt->bindValue(':data', $finalData, SQLITE3_BLOB);
+            $stmt->bindValue(':time', time(), SQLITE3_INTEGER);
+            $stmt->execute();
+
         } catch (Exception $e) {
-            error_log("Cache encryption failed: " . $e->getMessage());
+            error_log("Cache save failed: " . $e->getMessage());
+        }
+    }
+
+    private static function cleanupCache($maxAge = 604800) // 7 days in seconds
+    {
+        try {
+            $db = self::initializeCache();
+            if (!$db)
+                return;
+
+            $stmt = $db->prepare("DELETE FROM " . self::CACHE_TABLE . " WHERE created_at < :time");
+            $stmt->bindValue(':time', time() - $maxAge, SQLITE3_INTEGER);
+            $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Cache cleanup failed: " . $e->getMessage());
         }
     }
 
